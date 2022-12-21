@@ -16,5 +16,5 @@ const componentSlice = createSlice({
 });
 
 export const { helloWorld } = componentSlice.actions;
-export const selectGlobalState = (state: RootState) => state.component;
+export const selectComponent = (state: RootState) => state.component;
 export default componentSlice.reducer;
