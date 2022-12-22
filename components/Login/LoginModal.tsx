@@ -1,6 +1,8 @@
 import { capitalize } from "@mui/material";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import ModalProps from "../../interfaces/react-props/ModalProps";
+import { getAPI, postAPI } from "../../lib/fetchAPI";
 import Modal from "../common/Modal";
 import { SuccessIcon, WarnIcon } from "../Icon";
 
@@ -13,7 +15,7 @@ const LoginInput: React.FC<{
   errorMsg?: string;
 }> = (props) => {
   return (
-    <div className="grid grid-cols-4 mb-6">
+    <div className="grid grid-cols-4 mb-5">
       <label className="flex items-center col-span-1" htmlFor={props.id}>
         {props.label}
       </label>
@@ -54,7 +56,7 @@ const LoginModal: React.FC<ModalProps> = ({
   const [loginInfo, setLoginInfo] = useState({ ...initialLoginInfo });
   const [inputErr, setInputErr] = useState({ ...initialLoginInfo });
   const [msg, setMsg] = useState<{
-    status: "success" | "fail";
+    status: "success" | "failure";
     text: string;
   } | null>(null);
 
@@ -63,15 +65,34 @@ const LoginModal: React.FC<ModalProps> = ({
   const noInputErr =
     inputErr.email.length === 0 && inputErr.password.length === 0;
 
+  const isInvalid = isBlankInput || !noInputErr;
+
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationKey: ["login"],
+    mutationFn: postAPI("/api/login"),
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["login"]);
+    },
+  });
+
   const handleChange =
     (field: string): React.ChangeEventHandler<HTMLInputElement> =>
     (e) => {
       e.preventDefault();
       setLoginInfo((prev) => ({ ...prev, [field]: e.target.value }));
 
+      const inputLength = e.target.value.length;
+
       //Validate email
       if (field === "email") {
-        if (!e.target.value.includes("@") && e.target.value.length > 0) {
+        if (!e.target.value.includes("@") && inputLength > 0) {
           setInputErr((prev) => ({ ...prev, email: "Invalid email" }));
         } else {
           setInputErr((prev) => ({ ...prev, email: "" }));
@@ -80,11 +101,21 @@ const LoginModal: React.FC<ModalProps> = ({
 
       //validate password
       if (field === "password") {
+        const invalidLength = inputLength > 0 && inputLength < 8;
+
+        if (invalidLength) {
+          setInputErr((prev) => ({ ...prev, password: "Invalid password" }));
+        } else {
+          setInputErr((prev) => ({ ...prev, password: "" }));
+        }
       }
     };
 
-  const handleSubmit: React.FormEventHandler = (e) => {
+  const handleSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault();
+    if (!isInvalid) {
+      mutation.mutate(loginInfo);
+    }
   };
 
   useEffect(() => {
@@ -100,6 +131,7 @@ const LoginModal: React.FC<ModalProps> = ({
         closeModal();
         setLoginInfo({ ...initialLoginInfo });
         setInputErr({ ...initialLoginInfo });
+        setMsg(null);
       }}
       isOpen={isOpen}
       title={
@@ -110,7 +142,7 @@ const LoginModal: React.FC<ModalProps> = ({
       className="sm:w-[30rem]"
       isMobileFullScreen={false}
     >
-      <form onSubmit={handleSubmit} className="py-1">
+      <form onSubmit={handleSubmit} className="py-3">
         {/* INPUT */}
         {Object.keys(loginInfo).map((info) => (
           <LoginInput
@@ -146,10 +178,10 @@ const LoginModal: React.FC<ModalProps> = ({
             </div>
           )}
           <button
-            disabled={isBlankInput || !noInputErr}
+            disabled={isInvalid}
             className={`px-6 py-2 rounded ${
-              isBlankInput || !noInputErr
-                ? "text-gray-200 bg-gray-100"
+              isInvalid
+                ? "text-gray-400 bg-gray-200"
                 : "text-white bg-indigo-700 hover:bg-indigo-800"
             }`}
           >

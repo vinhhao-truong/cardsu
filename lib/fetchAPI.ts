@@ -1,27 +1,17 @@
 import axios from "axios";
 
-const fetchAPI =
-  (
-    url: string,
-    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE" = "GET",
-    data?: any,
-    headers?: any
-  ) =>
-  async () => {
-    const reqData = data ? { data: data } : {};
-    const reqHeaders = data ? { headers: headers } : {};
+export const getAPI = (url: string) => async () => {
+  const res = await axios.get(url);
+  return res.data;
+};
 
-    try {
-      const res = await axios({
-        method: method,
-        url: url,
-        ...reqData,
-        ...reqHeaders,
-      });
-      return res.data;
-    } catch (err) {
-      console.log(err);
-    }
-  };
+export const postAPI = (url: string, headers?: any) => async (data?: any) => {
+  const reqData = data ? { data: data } : {};
+  const reqHeaders = data ? { headers: headers } : {};
 
-export default fetchAPI;
+  const res = await axios.post(url, {
+    ...reqData,
+    ...reqHeaders,
+  });
+  return res.data;
+};

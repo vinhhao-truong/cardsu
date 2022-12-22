@@ -1,5 +1,5 @@
 import { QueryKey, useQuery } from "@tanstack/react-query";
-import fetchAPI from "../lib/fetchAPI";
+import getAPI from "../lib/fetchAPI";
 
 interface fetchInterface {
   url: string;
@@ -17,7 +17,7 @@ export default function useFetch({
 }: fetchInterface) {
   const query = useQuery(
     key,
-    fetchAPI(url, method ? method : "GET", reqData, headers)
+    getAPI(url, method ? method : "GET", reqData, headers)
   );
 
   return { ...query };
