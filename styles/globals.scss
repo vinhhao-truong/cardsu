@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap");
+@import "./common/modal.scss";
+
 html {
   background-color: #14213d;
+  color: white;
+  font-family: "Nunito Sans", sans-serif;
 }
