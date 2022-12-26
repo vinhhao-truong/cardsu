@@ -1,0 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.MuiBackdrop-root {
+  background: none !important;
+  background-color: none !important;
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+}
+
+html {
+  background-color: #14213d;
+  color: white;
+  font-family: "Nunito Sans", sans-serif;
+}
+/*# sourceMappingURL=globals.css.map */

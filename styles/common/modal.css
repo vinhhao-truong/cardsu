@@ -1,0 +1,7 @@
+.MuiBackdrop-root {
+  background: none !important;
+  background-color: none !important;
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+}
+/*# sourceMappingURL=modal.css.map */

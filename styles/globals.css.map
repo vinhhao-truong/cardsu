@@ -1,0 +1,10 @@
+{
+    "version": 3,
+    "mappings": "AAIA,OAAO,CAAC,wEAAI;AAJZ,SAAS,CAAT,IAAS;AACT,SAAS,CAAT,UAAS;AACT,SAAS,CAAT,SAAS;ACIT,AAAA,iBAAiB,CAAC;EAChB,UAAU,EAAE,eAAe;EAC3B,gBAAgB,EAAE,eAAe;EACjC,eAAe,EAAE,UAAU;CAC5B;;ADHD,AAAA,IAAI,CAAC;EACH,gBAAgB,EAAE,OAAO;EACzB,KAAK,EAAE,KAAK;EACZ,WAAW,EAAE,yBAAyB;CACvC",
+    "sources": [
+        "globals.scss",
+        "common/modal.scss"
+    ],
+    "names": [],
+    "file": "globals.css"
+}

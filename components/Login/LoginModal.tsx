@@ -5,6 +5,7 @@ import ModalProps from "../../interfaces/react-props/ModalProps";
 import { getAPI, postAPI } from "../../lib/fetchAPI";
 import Modal from "../common/Modal";
 import { SuccessIcon, WarnIcon } from "../Icon";
+import { signIn, useSession } from "next-auth/react";
 
 const LoginInput: React.FC<{
   label: string;
@@ -56,9 +57,11 @@ const LoginModal: React.FC<ModalProps> = ({
   const [loginInfo, setLoginInfo] = useState({ ...initialLoginInfo });
   const [inputErr, setInputErr] = useState({ ...initialLoginInfo });
   const [msg, setMsg] = useState<{
-    status: "success" | "failure";
+    status: "success" | "error";
     text: string;
   } | null>(null);
+
+  const { data: nextAuthData } = useSession();
 
   const isBlankInput =
     loginInfo.email.length === 0 || loginInfo.password.length === 0;
@@ -189,6 +192,9 @@ const LoginModal: React.FC<ModalProps> = ({
           </button>
         </div>
       </form>
+      <div onClick={() => signIn("google")} className="">
+        Login with google
+      </div>
     </Modal>
   );
 };
